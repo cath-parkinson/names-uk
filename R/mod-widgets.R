@@ -7,15 +7,16 @@ widgets_ui <- function(id){
   tagList(
     
     # Testing
-    actionBttn(
-      inputId = ns("debug"),
-      label = "debug"
-    ),
+    # actionBttn(
+    #   inputId = ns("debug"),
+    #   label = "debug"
+    # ),
     
     radioGroupButtons(
       inputId = ns("radio_select_gender"),
       label = "Select gender(s):",
-      choices = c("Girl", "Boy", "Both")
+      choices = c("Girl", "Boy", "All"),
+      selected = "All"
     ),
     
     pickerInput(
@@ -33,7 +34,8 @@ widgets_ui <- function(id){
 }
 
 widgets_server <- function(id,
-                           name_data){
+                           name_data,
+                           widget_inputs){
   
   moduleServer(id, function(input, output, session){
     
@@ -50,6 +52,9 @@ widgets_server <- function(id,
                         selected = (name_data %>% dplyr::pull(name) %>% unique())[1])
       
     })
+    
+    widget_inputs$select_names <- reactive(input$select_names)
+    widget_inputs$radio_select_gender <- reactive(input$radio_select_gender)
     
   })
   
