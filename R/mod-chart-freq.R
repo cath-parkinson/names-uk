@@ -19,7 +19,7 @@ chart_freq_ui <- function(id) {
 }
 
 chart_freq_server <- function(id,
-                              name_data,
+                              name_data_list,
                               names_to_plot,
                               gender) {
   
@@ -30,7 +30,7 @@ chart_freq_server <- function(id,
     })
     
     chart <- reactive({
-      plot_name_freq_over_time(name_data = name_data,
+      plot_name_freq_over_time(name_data = name_data_list$name_data,
                                names_to_plot = names_to_plot(),
                                gender = gender())
       })
@@ -72,7 +72,7 @@ chart_freq_demo <- function() {
     gender <- reactive({"All"})
     
     chart_freq_server("x",
-                     name_data = name_data,
+                     name_data = name_data_list$name_data,
                      names_to_plot = names_to_plot,
                      gender = gender)
     

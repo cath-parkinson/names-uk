@@ -41,6 +41,7 @@ plot_name_freq_over_time <- function(name_data,
     ggplot2::geom_line() +
     ggplot2::geom_point() +
     ggplot2::scale_x_continuous(breaks = chart_years) +
+    ggplot2::ylim(0, NA) +
     ggplot2::labs(x = "Year",
                   y = "Frequency",
                   colour = colour_legend_title) +

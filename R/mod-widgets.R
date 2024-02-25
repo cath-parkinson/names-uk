@@ -25,7 +25,8 @@ widgets_ui <- function(id){
       choices = NULL,
       multiple = TRUE,
       options = list(
-        `live-search` = TRUE
+        `live-search` = TRUE,
+        `actions-box` = TRUE
       )
     )
     
@@ -34,7 +35,7 @@ widgets_ui <- function(id){
 }
 
 widgets_server <- function(id,
-                           name_data,
+                           name_data_list,
                            widget_inputs){
   
   moduleServer(id, function(input, output, session){
@@ -48,8 +49,9 @@ widgets_server <- function(id,
       
       updatePickerInput(session,
                         inputId = "select_names",
-                        choices = name_data %>% dplyr::pull(name) %>% unique(),
-                        selected = (name_data %>% dplyr::pull(name) %>% unique())[1])
+                        choices = name_data_list$name_data %>% dplyr::pull(name) %>% unique(),
+                        selected = c(name_data_list$most_popular_girl, name_data_list$most_popular_boy)
+                        )
       
     })
     
