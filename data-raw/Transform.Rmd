@@ -1,0 +1,93 @@
+---
+title: "Transform Raw Data"
+output: html_document
+date: "2024-02-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Takes the ONS dataset and produces the data needed for the app.
+
+Data source: https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/livebirths/datasets/babynamesinenglandandwalesfrom1996
+
+This data only runs up to 2021. We will update once then latset data is available.
+
+```{r}
+library(readxl)
+library(tidyr)
+library(dplyr)
+
+```
+
+Read data
+
+```{r}
+
+sheet1 <- readxl::read_xlsx("babynames1996to2021.xlsx",
+                  sheet = "1",
+                  skip = 7)
+
+sheet2 <- readxl::read_xlsx("babynames1996to2021.xlsx",
+                  sheet = "2",
+                  skip = 7)
+
+```
+
+Create the data processing function
+
+```{r}
+
+transform_data <- function(sheet, gender_string){
+  
+  sheet %>% 
+    tidyr::pivot_longer(cols = -Name,
+                        names_to = "Metric") %>%
+    dplyr::mutate(year = sub(" .*", "", Metric),
+                  type = sub(".* ", "", Metric)) %>% 
+    dplyr::filter(type == "Count") %>% 
+    dplyr::select(name = Name,
+                  count = value,
+                  year = year) %>% 
+    dplyr::mutate(count = ifelse(grepl("\\[x\\]", count), "0", count)) %>% 
+    dplyr::mutate(gender = gender_string) %>% 
+    dplyr::mutate(count = as.integer(count),
+                  year = as.integer(year),
+                  gender = factor(gender,
+                                  levels = c("Girl",
+                                             "Boy"))) %>% 
+    dplyr::select(name, gender, year, count)
+
+  
+}
+
+
+```
+
+Stack the data together, and save
+
+```{r}
+
+df_boy <- transform_data(sheet1, "Boy")
+df_girl <- transform_data(sheet2, "Girl")
+
+df <- dplyr::bind_rows(df_boy,
+                       df_girl)
+
+saveRDS(df, file = file.path("..", "data", "data.RDS"))
+
+```
+
+Check the data set can be read in again
+
+```{r}
+
+check <- readRDS(file.path("..", "data", "data.RDS"))
+
+```
+
+
+
+
+
