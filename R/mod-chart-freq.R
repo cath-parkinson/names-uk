@@ -2,13 +2,13 @@
 
 chart_freq_ui <- function(id) {
   
+  ns <- NS(id)
+  
   fluidRow(
     column(11,
-           plotOutput(NS(id,
-                         "chart_freq"))),
+           plotOutput(ns("chart_freq"))),
     column(1,
-           downloadButton(NS(id,
-                             "dnld"),
+           downloadButton(ns("dnld"),
                           label = ""))
   )
   
