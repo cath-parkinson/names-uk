@@ -6,12 +6,12 @@
 # gender: optional gender to filter to ("Girl" or "Boy")
 plot_name_freq_over_time <- function(name_data,
                                      names_to_plot,
-                                     gender) {
+                                     gender = "All") {
   
   chart_data <- name_data %>% 
     dplyr::filter(name %in% names_to_plot)
   
-  if(!missing(gender)) {
+  if(gender != "All") {
     chart_data <- chart_data %>% 
       filter(gender == {{ gender }})
   }
@@ -20,7 +20,7 @@ plot_name_freq_over_time <- function(name_data,
     distinct(year) %>% 
     pull(year)
   
-  if(missing(gender)) {
+  if(gender == "All") {
   chart <- chart_data %>% 
     ggplot2::ggplot(aes(x = year,
                         y = count,
