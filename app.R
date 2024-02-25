@@ -4,6 +4,8 @@ library(shiny)
 library(shinyWidgets)
 library(shinythemes)
 
+name_data <- readRDS(file.path("data",
+                               "data.RDS"))
 
 ui <- fluidPage(
   
@@ -15,10 +17,14 @@ ui <- fluidPage(
     tabPanel("Explore",
              sidebarLayout(
                sidebarPanel(
+                 # Debug button - comment out in production
+                 # actionBttn("debug_main",
+                 #            "Debug"),
                  textInput("text", "Enter text:")
                ),
                mainPanel(
-                 textOutput("text_output")
+                 h3("Name frequency over time"),
+                 chart_freq_ui("chart_freq")
                )
              )
     )
@@ -31,9 +37,22 @@ server <- function(input,
                    output,
                    session) {
   
-  output$text_output <- renderText({
-    input$text
+  observeEvent(input$debug_main, {
+    browser()
   })
+  
+  names_to_plot <- reactive({
+    c("Alysha",
+      "Amaan",
+      "Brandon")
+  })
+  
+  gender <- reactive({"All"})
+  
+  chart_freq_server("chart_freq",
+                    name_data = name_data,
+                    names_to_plot = names_to_plot,
+                    gender = gender)
   
 }
 
