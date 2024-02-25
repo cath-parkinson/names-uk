@@ -9,17 +9,31 @@ ui <- fluidPage(
   
   theme = shinytheme("united"),
   
-  titlePanel("UK Baby Names")
+  navbarPage(
+    
+    title = "UK Baby Names",
+    tabPanel("Explore",
+             sidebarLayout(
+               sidebarPanel(
+                 textInput("text", "Enter text:")
+               ),
+               mainPanel(
+                 textOutput("text_output")
+               )
+             )
+    )
+  )
   
 )
 
 
 server <- function(input,
-                    output,
-                    session) {
+                   output,
+                   session) {
   
-  
-  
+  output$text_output <- renderText({
+    input$text
+  })
   
 }
 
