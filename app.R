@@ -20,7 +20,7 @@ ui <- fluidPage(
                  # Debug button - comment out in production
                  # actionBttn("debug_main",
                  #            "Debug"),
-                 textInput("text", "Enter text:")
+                 widgets_ui("widgets")
                ),
                mainPanel(
                  h3("Name frequency over time"),
@@ -41,18 +41,18 @@ server <- function(input,
     browser()
   })
   
-  names_to_plot <- reactive({
-    c("Alysha",
-      "Amaan",
-      "Brandon")
-  })
+  widget_inputs <- reactiveValues()
   
-  gender <- reactive({"All"})
+  # Modules
+  
+  widgets_server("widgets",
+                 name_data = name_data,
+                 widget_inputs = widget_inputs)
   
   chart_freq_server("chart_freq",
                     name_data = name_data,
-                    names_to_plot = names_to_plot,
-                    gender = gender)
+                    names_to_plot = widget_inputs$select_names,
+                    gender = widget_inputs$radio_select_gender)
   
 }
 
