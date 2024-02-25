@@ -9,7 +9,11 @@ chart_freq_ui <- function(id) {
            plotOutput(ns("chart_freq"))),
     column(1,
            downloadButton(ns("dnld"),
-                          label = ""))
+                          label = ""),
+           # Debug button - comment out in production
+           # actionBttn(ns("debug_chart_freq"),
+           #            "Debug")
+           )
   )
   
 }
@@ -20,6 +24,10 @@ chart_freq_server <- function(id,
                               gender) {
   
   moduleServer(id, function(input, output, session) {
+    
+    observeEvent(input$debug_chart_freq, {
+      browser()
+    })
     
     chart <- reactive({
       plot_name_freq_over_time(name_data = name_data,
